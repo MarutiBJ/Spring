@@ -1,0 +1,13 @@
+
+[windows]
+34.251.253.33
+
+[windows:vars]
+ansible_ssh_user=Administrator
+ansible_ssh_pass=!mO$JNwq7lrineTlZ$-w7.8pAquDUNW5
+ansible_ssh_port=5986
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore
+
+
+

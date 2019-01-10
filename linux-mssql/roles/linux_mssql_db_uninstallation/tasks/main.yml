@@ -1,0 +1,20 @@
+---
+# tasks file for linux_mssql_db_uninstallation
+
+- name: Copy Rollback MSSQL sql file
+  template:
+     src: "{{item}}"
+     dest: "/tmp/{{item}}"
+     mode: 0744
+  with_items: ['rollback_changes.sql','run.sh']
+
+
+- name: Clean up MSSQL database,table and user
+  shell: /tmp/run.sh
+
+
+- name: Remove MSSQL packages
+  yum:
+    name: "mssql*"
+    state: absent
+

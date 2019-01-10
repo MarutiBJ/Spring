@@ -1,0 +1,34 @@
+ ---
+#Name:Role for installing APACHE on linux.
+#
+# Current Author: Bunty Manchundiya.
+#
+# Created: 03-10-2018
+
+ - name: Download EPEL Repo -RHEL 7
+    get_url: url=http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm dest=/tmp/epel-release-latest-7.noarch.rpm
+
+  - name: Install EPEL Repo - RHEL 7
+    command: rpm -ivh /tmp/epel-release-latest-7.noarch.rpm creates=/etc/yum.repos.d/epel.repo
+
+  - name: Install libselinux-python
+    yum: name=libselinux-python
+
+  - name: Install the httpd rpm
+    yum: name=httpd
+
+  - name: install firewalld
+    yum: name=firewalld
+
+  - name: Enable firewalld
+    service: name=firewalld state=started enabled=yes
+
+
+  - name: start the httpd service
+    service: name=httpd state=started
+
+  - name: Allow http/https
+    command: firewall-cmd --zone=dmz --permanent --add-service=http --add-service=https
+
+  - name: start the firewalld service
+    service: name=firewalld state=restarted

@@ -1,0 +1,33 @@
+---
+- name: Stop the service of postgres
+  command:  sudo systemctl stop postgresql-10 
+  ignore_errors: true
+
+- name: remove the packages
+  command: sudo yum remove {{ item }} -y
+  with_items:
+     pgdg-redhat96-9.6-3.noarch
+     pgdg-redhat10-10-2.noarch
+     postgresql96-libs-9.6.11-1PGDG.rhel7.x86_64
+     postgresql-libs-9.2.24-1.el7_5.x86_64
+     postgresql10-libs-10.6-1PGDG.rhel7.x86_64   
+     postgresql96-9.6.11-1PGDG.rhel7.x86_64
+     postgresql-9.2.24-1.el7_5.x86_64
+     postgresql10-10.6-1PGDG.rhel7.x86_64
+     postgresql96-server-9.6.11-1PGDG.rhel7.x86_64
+     postgresql-devel-9.2.24-1.el7_5.x86_64
+
+- name: remove dir
+  command: sudo rm -rf pgsql
+  args:
+   chdir: /var/lib
+
+- name: remove dir
+  command: sudo rm -rf {{ item }}
+  args:
+    chdir: /usr
+  with_items:
+     pgsql-9.6
+     pgsql-10
+  ignore_errors: true
+ 

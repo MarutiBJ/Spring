@@ -1,0 +1,7 @@
+---
+
+# privilege variable
+privilege: "SELECT, INSERT, DELETE, ALTER, EXECUTE, CONTROL"
+
+newPassword: ''
+action: 'create'

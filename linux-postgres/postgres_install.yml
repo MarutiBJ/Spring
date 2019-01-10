@@ -1,0 +1,6 @@
+---
+- name: postgresql playbook 
+  hosts: all
+  roles:
+    - linux_postgres_db_installation
+    - linux_postgres_db_cretion

@@ -1,0 +1,25 @@
+---
+# vars file for role
+
+# User for asadmin in bashrc
+glassfish_user: "selecteduser"
+# Glassfish/Payara version number
+glassfish_version: '4.1.1.163'
+
+glassfish_product: "payara41"
+
+# Mirror to download the Glassfish/Payara redistributable package from
+
+glassfish_mirror: "https://search.maven.org/remotecontent?filepath=fish/payara/distributions/payara-web/4.1.1.163/payara-web-4.1.1.163.zip"
+
+# Base installation directory the Glassfish/Payara distribution
+glassfish_install_dir: /opt/glassfish
+
+# Directory to store files downloaded for Glassfish/Payara installation
+#glassfish_download_dir: "{{ x_ansible_download_dir | default('~/.ansible/tmp/downloads') }}"
+glassfish_download_dir: "/tmp"
+
+
+glassfish_redis_filename: "payara-{{ glassfish_version }}.zip"
+
+admin_password: "admin"

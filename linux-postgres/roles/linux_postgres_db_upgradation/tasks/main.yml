@@ -1,0 +1,70 @@
+---
+- name: install repo for PostgreSQL10
+  command: yum install "{{postgres_rpm_new}}" -y
+  ignore_errors: true
+- name: install Visual software
+  yum: pkg={{item}} state=installed
+  with_items:
+     - "{{postgres_new}}"
+     - "{{postgres_server_new}}"
+#    - "{{postgres_contrib_new}}"
+     - "{{postgres_lib_new}}"
+#     - name: yum install postgresql0
+#       yum:
+#         name: "{{postgres_new}}"
+#         state: present
+#     - name: yum install postgresql96-server
+#       yum:
+#         name: "{{postgres_server_new}}"
+#         state: present
+#     - name: yum install postgres10
+#       yum:
+#          name: "{{postgres_server_new}}"
+#          state: present
+#     - name: yum install postgresql10 server
+#       yum:
+#          name: "{{postgres_new}}"
+#          state: present
+#     - name: yum install postgresql10-contrib
+#       yum:
+#         name: "{{postgres_contrib_new}}"
+#         state: present
+- name: postgres init
+  command: /usr/"{{postgres_init_new}}"/bin/postgresql-10-setup initdb
+- name: stop service postgresql 9.6
+  service:
+    name: postgresql-9.6
+    state: stopped
+- name: Debug
+  become: yes
+  become_user: postgres
+  command:     whoami
+  register:    whoami
+- debug: msg="{{whoami.stdout}}"
+- name: shell command /var/lib/psql
+  become_user: postgres
+  shell: (cd /var/lib/pgsql && /usr/"{{postgres_init_new}}"/bin/pg_upgrade --old-bindir=/usr/"{{postgres_init_old}}"/bin/ --new-bindir=/usr/"{{postgres_init_new}}"/bin/ --old-datadir=/var/lib/pgsql/9.6/data/ --new-datadir=/var/lib/pgsql/10/data/ --check)
+- name: shell command /var/lib/psql ruuning the command
+  become_user: postgres
+  shell: (cd /var/lib/pgsql && /usr/pgsql-10/bin/pg_upgrade --old-bindir=/usr/pgsql-9.6/bin/ --new-bindir=/usr/pgsql-10/bin/ --old-datadir=/var/lib/pgsql/9.6/data/ --new-datadir=/var/lib/pgsql/10/data/)
+- name: start service postgresql 10
+  service:
+     name: postgresql-10
+     state: started
+- name: shell command /var/lib/psql
+  become_user: postgres
+  shell: (cd /var/lib/pgsql && ./analyze_new_cluster.sh)
+    
+- name: shell command /var/lib/psql
+  become_user: postgres
+  shell: (cd /var/lib/pgsql && ./delete_old_cluster.sh)
+
+- name: Status of postgres server after upgradation
+  shell: sudo systemctl status postgresql-10
+  register: output
+
+- debug:
+     var: output["stdout_lines"]
+
+
+

@@ -1,0 +1,8 @@
+---
+- name: Install Apache in Windows System
+  hosts: windows
+  gather_facts: yes
+  tasks:
+  roles:
+  - apache-windows
+

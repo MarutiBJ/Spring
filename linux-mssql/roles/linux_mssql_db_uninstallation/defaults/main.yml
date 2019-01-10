@@ -1,0 +1,8 @@
+---
+username: 'compose'
+password: 'Canopy1!'
+
+database_name: 'bmw_db'
+db_pass: 'Canopy1!'
+table_name: 'bmw_demo'
+

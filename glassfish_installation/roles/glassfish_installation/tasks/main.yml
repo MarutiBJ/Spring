@@ -1,0 +1,58 @@
+---
+- name: Installing unzip
+  command: yum -y install unzip
+  become: yes
+  
+- name: Download Java 8
+  command: yum install -y java-1.8.0-openjdk
+  become: yes
+- name: Download glassfish
+  get_url:
+    url: "{{ glassfish_mirror }}"
+    dest: "{{ glassfish_download_dir }}/{{ glassfish_redis_filename }}"
+
+- name: Creates directory
+  file: path=/tmp/payara state=directory
+
+- name: Unarchive a file that is already on the remote machine
+  unarchive:
+    src: /tmp/payara-{{ glassfish_version }}.zip
+    dest: /tmp/payara
+    remote_src: yes
+
+- name: Copy shellscript
+  become: yes
+  template:
+    src: shellscript.j2
+    dest: "{{ glassfish_download_dir }}/payara/payara41/bin/shellscript.sh"
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
+
+- name: Copy passwordfile
+  become: yes
+  template:
+    src: password.j2
+    dest: "{{ glassfish_download_dir }}/payara/payara41/bin/password.txt"
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
+
+- name: Change the default password
+  command: sudo sh shellscript.sh
+  args:
+   chdir: /tmp/payara/payara41/bin
+#  become: yes
+
+- name: put default admin password in file.
+  lineinfile: dest=/tmp/payara/payara41/bin/password.txt
+    regexp='AS_ADMIN_PASSWORD='
+    line='AS_ADMIN_PASSWORD=password123'
+    state=present
+
+- name: start and  enable the payara41
+  shell: " /tmp/payara/payara41/bin/asadmin start-domain && /tmp/payara/payara41/bin/asadmin --passwordfile /tmp/payara/payara41/bin/password.txt --host localhost --port 4848 enable-secure-admin"
+
+
+
+

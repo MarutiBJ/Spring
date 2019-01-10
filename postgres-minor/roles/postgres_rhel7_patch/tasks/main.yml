@@ -1,0 +1,37 @@
+---
+# tasks file for postgres_patch
+- name: install wget
+  command: yum install wget -y
+#- name: download patch in specific directory
+# command: chdir=/home
+- name: download postgres version
+  command: wget https://ftp.postgresql.org/pub/source/v9.6.8/postgresql-9.6.8.tar.gz
+- name: unzip postgres patch
+  command: tar -xvf postgresql-9.6.8.tar.gz
+#    - name: Go to postgresql-9.6.8
+#      command: chdir=/home/ec2-user/postgresql-9.6.8
+#      become_user: postgres
+- name: Build configure
+  shell: "{{ item }}"
+  args:
+    chdir: /home/ec2-user/postgresql-9.6.8
+  with_items:
+     - ./configure
+     - make
+     - make -C config all
+     - make install
+- name: Build config
+  shell: "{{ item }}"
+  args:
+     chdir: /home/ec2-user/postgresql-9.6.8/config
+  with_items:
+     - make
+     - make install
+- name: Build contrib
+  shell: "{{ item }}"
+  args:
+    chdir: /home/ec2-user/postgresql-9.6.8/contrib
+  with_items:
+     - make
+     - make install
+

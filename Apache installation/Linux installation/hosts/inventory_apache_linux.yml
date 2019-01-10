@@ -1,0 +1,9 @@
+[linux]
+WEBSERVER ansible_host=34.254.195.63
+
+[linux:vars]
+ansible_user=ec2-user
+
+ansible_ssh_private_key_file=/home/BMW_POC/roles/aws-infra/ANSIBLE_BMW_KEY.pem
+ansible_ssh_port=22
+ansible_connection=ssh

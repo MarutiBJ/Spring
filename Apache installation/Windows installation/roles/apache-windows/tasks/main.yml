@@ -1,0 +1,73 @@
+---
+#Name:Role for installing APACHE on windows.
+#
+# Current Author: Bunty Manchundiya.
+#
+# Created: 03-10-2018
+ - name: Delete tmp file if exists
+      win_shell: rd /s /q "C:\tmp"
+      args:
+        executable: cmd.exe
+
+    - name: Create tmp folder for storing software
+      win_shell: mkdir C:\tmp
+      args:
+        executable: cmd.exe
+
+    - name: Install pre-requisites Microsoft Visual C++ Redistributable
+      win_get_url:
+        url: https://aka.ms/vs/15/release/VC_redist.x64.exe
+        dest: C:\tmp\VC_redist.x64.exe
+
+    - name: Executing VC_redist
+      win_package:
+        path: C:\tmp\VC_redist.x64.exe
+        product_id: VC_redist
+        arguments: /install /passive /norestart
+
+    - name: Check if VC_redist is installed or not
+      win_stat:
+        path: C:\WINDOWS\System32\mscvp140.dll
+
+    - name: Copying Apache24 from remote machine to local machine
+      win_get_url:
+        url: https://home.apache.org/~steffenal/VC15/binaries/httpd-2.4.35-win64-VC15.zip
+        dest: C:\tmp\httpd-2.4.35-win64-VC15.zip
+
+    - name: Extracting zip file to Apache24
+      win_unzip:
+        src: C:\tmp\httpd-2.4.35-win64-VC15.zip
+        dest: C:\
+
+    - name: Check if Apache is extracted or not
+      win_stat:
+        path: C:\Apache24\bin\httpd.exe
+    - name: Remove Apache Services if already exists
+      win_service:
+        name: Apache2.4
+        state: absent
+
+#    - name: Check if 80 port is acquired or not
+#      wait_for:
+#        host: 34.243.75.189
+#        port: 80
+#        timeout: 1
+
+    - debug:
+        msg: "ok"
+
+    - name: Change port 80 to 8080
+      win_shell: (gc httpd.conf) -replace 'Listen 80', 'Listen 8080' | Out-File -encoding ASCII httpd.conf
+      args:
+        chdir: C:\Apache24\conf\
+
+    - name: Install httpd as a service
+      win_command: httpd.exe -k install
+      args:
+        chdir: C:\Apache24\bin\
+
+    - name: start the service
+      win_service:
+        name: Apache2.4
+        status: auto
+        state: started

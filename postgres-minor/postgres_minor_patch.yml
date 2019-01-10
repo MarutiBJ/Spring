@@ -1,0 +1,5 @@
+---
+- hosts: all
+  roles:
+  - postgres_rhel7_patch
+  - postgres_rhel7_start_new_service

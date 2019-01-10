@@ -1,0 +1,31 @@
+---
+
+- name: Copy create_table sql file
+  template:
+     src: "{{item}}"
+     dest: "/tmp/{{item}}"
+     mode: 0744
+  with_items: 
+     - ['create_table.sql','run.sh']
+
+- name: Create Database and table
+  shell: /tmp/run.sh
+  register: result
+
+- debug:
+    var: result['stdout']
+
+- name: wait for few seconds
+  wait_for: timeout=5
+
+- name: Delete template files
+  file:
+     path: /tmp/create_table.sql
+     state: absent
+ 
+
+#- name: Import database dump
+#  mssql_db:
+#    name: "{{database_name}}"
+#    state: import
+#    target: /tmp/dump.sql

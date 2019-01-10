@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sudo printf "CREATE TABLE leads (id INTEGER PRIMARY KEY, name VARCHAR);INSERT INTO leads VALUES (2,'BCD');SELECT * FROM leads;" > createdb.sql
+
+sudo psql -U postgres -d testdb -f createdb.sql
+

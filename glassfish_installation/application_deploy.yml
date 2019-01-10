@@ -1,0 +1,17 @@
+---
+- hosts: all
+  tasks: 
+# tasks file for gfdeploy
+   - name: downnload sample application
+     #become: yes
+     get_url:
+       url: "https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war"
+       dest: "/tmp/payara/payara41"
+
+
+    #wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war
+   - name: to deploy an application
+ # become: yes
+#     shell: " /tmp/payara/payara41/bin/asadmin deploy /tmp/payara/payara41/sample.war && tmp/payara/payara41/bin/asadmin --passwordfile /tmp/password.txt"
+     shell: " /tmp/payara/payara41/bin/asadmin deploy /tmp/payara/payara41/sample.war  --user admin --passwordfile /tmp/payara/payara41/bin/password.txt"
+

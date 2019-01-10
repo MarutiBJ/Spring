@@ -1,0 +1,14 @@
+---
+#Name: Deploying APACHE on AWS Linux EC2 instance.
+#
+# Current Author: Bunty Manchundiya.
+#
+# Created: 03-10-2018
+
+- hosts: linux
+  become: yes
+  tasks:
+  roles:
+  - apache-linux
+   
+ 

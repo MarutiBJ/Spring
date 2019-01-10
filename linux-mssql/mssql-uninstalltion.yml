@@ -1,0 +1,14 @@
+---
+
+- name: mssql uninstalltion playbook
+  hosts: all
+  gather_facts: false
+  roles:
+        - linux_mssql_db_uninstallation
+
+  post_tasks:
+  
+        - name: Delete template files
+          file:
+            path: /tmp/rollback_changes.sql
+            state: absent

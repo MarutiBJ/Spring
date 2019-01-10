@@ -1,0 +1,39 @@
+---
+- name: install repo for PostgreSQL 9.6.11
+  command: "yum install  https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm -y"
+- name: yum install postgresql96
+  yum:
+    name: postgresql96
+    state: present
+- name: yum install postgresql96-server
+  yum:
+    name: postgresql96-server
+    state: present
+- name: create directory
+  file:
+     path: /home/pgdata004
+     state: directory
+- name: change permission and owner
+  file:
+     path: /home/pgdata004
+     owner: postgres
+     group: postgres
+     mode: 0777
+- name: "initialize new postgresql cluster"
+  become_user: postgres
+#  sudo: yes
+  command: /usr/pgsql-9.6/bin/initdb -D /home/pgdata004
+- name: Ensure PostgreSQL unix socket dirs exist.
+  file:
+     path: /var/run/postgresql
+     state: directory
+     owner: postgres
+     group: postgres
+     mode: 02775
+- name: "initialize new postgresql cluster"
+ # become: true 
+  become_user: postgres
+#  sudo: yes
+ # sudo_user: postgres
+  command: /usr/pgsql-9.6/bin/pg_ctl -D /home/pgdata004 -l logfile start
+

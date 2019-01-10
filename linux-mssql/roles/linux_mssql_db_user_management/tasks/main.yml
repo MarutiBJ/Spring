@@ -1,0 +1,8 @@
+---
+
+- include_tasks: copyTemplate.yml
+- include_tasks: users.yml
+- include_tasks: removeTemplate.yml
+
+
+

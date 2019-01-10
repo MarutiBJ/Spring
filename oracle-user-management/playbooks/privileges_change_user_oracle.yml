@@ -1,0 +1,6 @@
+- hosts: all
+  become: true
+  tasks:
+  - import_role:
+      name: roles/OracleUserManagement_role
+      tasks_from: user_privileges_change_oracle.yml

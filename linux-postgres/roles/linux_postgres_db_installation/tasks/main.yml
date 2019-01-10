@@ -1,0 +1,57 @@
+---
+- name: install repo for PostgreSQL 9.6.10
+  command: yum install "{{postgres_rpm_old}}" -y
+  ignore_errors: true
+- name: install Visual software
+  yum: pkg={{item}} state=installed
+  with_items:
+    - "{{postgres_old}}"
+    - "{{postgres_server_old}}"
+#   - "{{postgres_contrib_old}}"
+    - "{{postgres_lib_old}}"
+  ignore_errors: true
+ 
+#     - name: yum install postgresql96
+#       yum:
+#         name: "{{postgres_old}}"
+#         state: present
+#     - name: yum install postgresql old version 
+#       yum:
+#         name: "{{postgres_server_old}}"
+#         state: present
+#     - name: yum install postgres96-contrib 
+#       yum: 
+##         name: "{{postgres_contrib_old}}"
+#         state: latest
+ #        ignore_errors: true 
+#     - name: yum install postgres96-libs
+#       yum:
+#          name:  "{{postgres_lib_old}}"
+#          state: present
+- name: postgres96 init database
+  command: /usr/"{{postgres_init_old}}"/bin/postgresql96-setup initdb
+- name: Ensure the PostgreSQL service is runnin
+  service:
+    name: postgresql-9.6
+    state: started
+- name: yum install python
+  yum:
+    name: python-psycopg2
+    state: present
+- name: yum install libpq-dev
+  yum:
+    name: postgresql-devel
+    state: present
+#- name: Ensure the PostgreSQL service is runnin
+#  service:
+#    name: postgresql-9.6
+#    state: stopped
+#- replace:
+#    path: /var/lib/pgsql/9.6/data/pg_hba.conf
+#    regexp: 'peer'
+#    replace: 'trust'
+#    backup: yes
+#- name: Ensure the PostgreSQL service is runnin
+#  service:
+#    name: postgresql-9.6
+#    state: started

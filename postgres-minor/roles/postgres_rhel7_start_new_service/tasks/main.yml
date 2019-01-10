@@ -1,0 +1,10 @@
+---
+# tasks file for postgres_linux_rhel_new_patch_start
+- name: Stop Previous Version
+  command: /usr/local/pgsql/bin/pg_ctl -D /home/pgdata004 stop
+  become: true
+  become_user: postgres
+- name: Start Current Patch
+  command: /usr/local/pgsql/bin/pg_ctl -D /home/pgdata004/ -l logfile  start
+  become: true
+  become_user: postgres

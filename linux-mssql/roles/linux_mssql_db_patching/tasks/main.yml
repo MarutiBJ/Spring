@@ -1,0 +1,13 @@
+---
+# tasks file for patch
+
+- name: Patch download
+  yum:
+    name: '{{mssqlversion}}'
+    state: latest
+  register: output
+
+- debug:
+    var: output['results']
+
+

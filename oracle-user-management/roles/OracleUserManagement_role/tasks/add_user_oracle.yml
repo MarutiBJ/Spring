@@ -1,0 +1,16 @@
+---
+# tasks file for OracleUserManagement
+
+- name: Copy the List of User to Add in Oracle 
+  template:
+    src: template/add_user_oracle.csv
+    dest: /home/ec2-user/
+
+- name: Copy the Oracle Add User Shell Script
+  template:
+    src: template/add_user_oracle.sh
+    dest: /home/ec2-user/
+
+- name: Run the shell script to add the user in db
+  shell: sh /home/ec2-user/add_user_oracle.sh
+
